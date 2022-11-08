@@ -1,0 +1,13 @@
+Response.Cache.SetCacheability(HttpCacheability.NoCache)
+If Not Roles.IsUserInRole("Staff") Or Not Roles.IsUserInRole("Admin") Then
+    Response.Redirect("~/Account/Login.aspx")
+End If
+If Not Page.IsPostBack Then
+    lblidno.Text = Server.HtmlDecode(Profile.Idno)
+    lblFY2.Text = CDate(Server.HtmlDecode(Profile.FY_Ko1))
+    lblFY.Text = CDate(Server.HtmlDecode(Profile.FY_Ko))
+    GridView3.SelectedIndex = 0
+    Call loadko()
+    txtidno.Text = lblidno.Text
+    txtbencoveredplan.Text = lblFY2.Text & " To " & lblFY.Text
+End If

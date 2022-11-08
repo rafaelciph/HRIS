@@ -1,0 +1,172 @@
+<%@ Master Language="VB" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script runat="server">
+    Protected Sub Page_Load(sender As Object, e As System.EventArgs)
+        If Not Roles.IsUserInRole("Staff") Or Not Roles.IsUserInRole("Admin") Then
+            Response.Redirect("~/Account/Login.aspx")
+        End If
+        'Label1.Text = Server.HtmlDecode(Profile.Idno)
+        If Not Page.IsPostBack Then
+            DropDownList1.Text = Server.HtmlDecode(Profile.FY_Ko)
+            'DropDownList2.Text = Server.HtmlDecode(Profile.FY_Ko1)
+            lblidno.Text = Server.HtmlDecode(Profile.Idno)
+        End If
+    End Sub
+    Protected Sub DropDownList1_SelectedIndexChanged(sender As Object, e As System.EventArgs)
+        Profile.FY_Ko = Server.HtmlEncode(DropDownList1.SelectedValue)
+        'Profile.FY_Ko1 = Server.HtmlEncode(DropDownList2.SelectedValue)
+    End Sub
+    Protected Sub DropDownList2_SelectedIndexChanged(sender As Object, e As System.EventArgs)
+        'Profile.FY_Ko = Server.HtmlEncode(DropDownList1.SelectedValue)
+        Profile.FY_Ko1 = Server.HtmlEncode(DropDownList2.SelectedValue)
+    End Sub
+    Protected Sub LoginStatus1_LoggedOut(ByVal sender As Object, ByVal e As System.EventArgs)
+        Response.Buffer = True
+        Session.Abandon()
+        Response.Clear()
+        Response.Redirect("~/Account/Login.aspx")
+    End Sub
+</script>
+<%--disable Browser Back button in asp.net application--%>
+<script type="text/javascript">
+    window.history.forward();
+    function noBack() {
+        window.history.forward();
+    }
+</script>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title>Human Resources Information System</title>
+     <link rel="shortcut icon" href="ico/ciph1.ico" />
+    <link href="StyleSheet.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .style1
+        {
+            height: 46px;
+        }
+        .style2
+        {
+            width: 197px;
+        }
+        .style3
+        {
+            height: 300px;
+            width: 197px;
+        }
+        .style4
+        {
+            width: 100%;
+        }
+        .style5
+        {
+            color: #FFFFFF;
+        }
+        </style>
+</head>
+<body leftmargin="0" topmargin="0">
+    <form id="form1" runat="server">
+    <div><table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td colspan="2" 
+                    style="border-bottom: thick solid #3A4F63; background-color: #4B6C9E; text-align: right; border-bottom-color: #FFFFFF;" 
+                    class="style1">
+                    <span class="style5">IDNo:</span>&nbsp;<asp:Label ID="lblidno" align="absmiddle" runat="server" 
+                        style="color: #FFFFFF"></asp:Label>
+                    &nbsp;<span class="style5">|</span>
+                    <asp:Label ID="lblidno0" align="absmiddle" runat="server" 
+                        style="color: #FFFFFF">Selected Fiscal Year</asp:Label>
+                    <asp:DropDownList align="absmiddle"
+                        ID="DropDownList2" runat="server" AutoPostBack="True" 
+                        DataSourceID="SqlDataSource2" DataTextField="EDFROM" DataTextFormatString="{0:d}" 
+                        DataValueField="EDFROM" 
+                        onselectedindexchanged="DropDownList1_SelectedIndexChanged" 
+                        BackColor="#4B6C9E" ForeColor="White" Enabled="False" Visible="False">
+                    </asp:DropDownList>
+                    &nbsp;<asp:DropDownList align="absmiddle"
+                        ID="DropDownList1" runat="server" AutoPostBack="True" 
+                        DataSourceID="SqlDataSource1" DataTextField="EDTO" DataTextFormatString="{0:d}" 
+                        DataValueField="EDTO" 
+                        onselectedindexchanged="DropDownList1_SelectedIndexChanged" 
+                        BackColor="#4B6C9E" ForeColor="White">
+                    </asp:DropDownList>
+                    &nbsp;<span class="style5">|</span>&nbsp;<asp:LoginStatus ID="LoginStatus1" align="absmiddle" runat="server" style="color: #FFFFFF" />
+                    &nbsp;&nbsp;
+                    </td>
+            </tr>
+            <tr>
+                <td colspan="1" style="border-bottom: silver thin solid; text-align: center;" 
+                    class="style2" width="5px">
+                    </td>
+                <td colspan="1" style="border-bottom: silver thin solid;" class="style4" 
+                    width="5px">
+                </td>
+            </tr>
+            <tr>
+                <td style="vertical-align: top; background-color: #4B6C9E" class="style3">
+                    <asp:TreeView ID="TreeView1" runat="server" ImageSet="Arrows" ForeColor="White" 
+                        style="color: #FFFFFF">
+                        <ParentNodeStyle Font-Bold="False" />
+                        <HoverNodeStyle Font-Underline="False" ForeColor="#5555DD" BackColor="Yellow" />
+                        <SelectedNodeStyle Font-Underline="False" ForeColor="#5555DD" Font-Bold="True" />
+                        <Nodes>
+                            <asp:TreeNode NavigateUrl="~/UserProfile.aspx" Text="User Profile" 
+                                Value="User Profile"></asp:TreeNode>
+                            <asp:TreeNode NavigateUrl="~/Default.aspx" Text="Home" Value="Home">
+                            </asp:TreeNode>
+                            <asp:TreeNode Text="HR" Value="HR">
+                                <asp:TreeNode NavigateUrl="~/HR/Employee.aspx" Text="Employee Profile" 
+                                    Value="Employee Profile"></asp:TreeNode>
+                                <asp:TreeNode NavigateUrl="~/HR/Attendance.aspx" Text="Attendance" 
+                                    Value="Attendance"></asp:TreeNode>
+                            </asp:TreeNode>
+                            <asp:TreeNode Text="Request" Value="Request">
+                                <asp:TreeNode NavigateUrl="~/Req/Request.aspx" Text="Leave and Field Request" 
+                                    Value="Leave and Field Request"></asp:TreeNode>
+                            </asp:TreeNode>
+                            <asp:TreeNode Text="Medical/Dental" Value="Medical/Dental">
+                                <asp:TreeNode NavigateUrl="~/Med/MBT.aspx" Text="Medical Transaction" 
+                                    Value="Medical Transaction"></asp:TreeNode>
+                                <asp:TreeNode Text="Dental Transaction" Value="Dental Transaction">
+                                </asp:TreeNode>
+                            </asp:TreeNode>
+                            <asp:TreeNode Text="Maintenance" Value="Maintenance">
+                                <asp:TreeNode NavigateUrl="~/Maintenance/ABP.aspx" Text="Annual Benefit Plan" 
+                                    Value="Annual Benefit Plan"></asp:TreeNode>
+                                <asp:TreeNode Text="Dependent Master List" Value="Dependent Master List" 
+                                    NavigateUrl="~/Maintenance/DML.aspx">
+                                </asp:TreeNode>
+                                <asp:TreeNode Text="Department List" Value="Department List"></asp:TreeNode>
+                                <asp:TreeNode Text="Position List" Value="Position List"></asp:TreeNode>
+                            </asp:TreeNode>
+                        </Nodes>
+                        <NodeStyle Font-Names="Tahoma" Font-Size="10pt" ForeColor="Black" HorizontalPadding="5px"
+                            NodeSpacing="0px" VerticalPadding="0px" />
+                    </asp:TreeView>
+                </td>
+                <td style="vertical-align: top">
+                    <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                    </asp:ContentPlaceHolder>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="height: 40px">
+                    Copyright © 2016 Compassion Pilipinas</td>
+            </tr>
+        </table>
+    </div>
+        <asp:SiteMapDataSource ID="SiteMapDataSource1" runat="server" />
+    <asp:SqlDataSource ID="SqlDataSource1" runat="server" 
+        ConnectionString="<%$ ConnectionStrings:HRDSConnectionString %>" 
+        SelectCommand="SELECT [EDFROM], [EDTO] FROM [Fiscal_Year] ORDER BY [EDTO]">
+    </asp:SqlDataSource>
+    <asp:SqlDataSource ID="SqlDataSource2" runat="server" 
+        ConnectionString="<%$ ConnectionStrings:HRDSConnectionString %>" 
+        SelectCommand="SELECT [EDFROM], [EDTO] FROM [Fiscal_Year] WHERE ([EDTO] = @EDTO)">
+        <SelectParameters>
+            <asp:ControlParameter ControlID="DropDownList1" Name="EDTO" 
+                PropertyName="SelectedValue" Type="DateTime" />
+        </SelectParameters>
+    </asp:SqlDataSource>
+    </form>
+</body>
+</html>
